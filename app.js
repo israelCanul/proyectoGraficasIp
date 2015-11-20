@@ -48,7 +48,7 @@ app.use('/users', users);
     //avisamos a consola de un nuevo usuario conectado 
     console.log("New user connected");
     contDatos.findAllDato(io);
-
+    contDatos.getDataAutoComplete(io);
 
     // funcion que se encarga de compartir la informacion
     // con los nuevos clientes que soliciten info
@@ -56,10 +56,50 @@ app.use('/users', users);
       // obtiene todos los mensajes
       contDatos.findAllDato(io);      
     });
+    socket.on('get data autocomplete', function() {
+      // obtiene todos los mensajes
+      contDatos.getDataAutoComplete(io);      
+    });    
     socket.on('get data by date', function(date) {
       // obtiene todos los mensajes
       contDatos.findDatoByFecha(io,date);      
     });
+    socket.on('get data by time', function(param) {
+      // obtiene todos los mensajes
+      contDatos.findDatoByTime(io,param);      
+    });
+    socket.on('get data by type', function(param) {
+      // obtiene todos los mensajes
+      contDatos.findDatoByType(io,param);      
+    });
+    socket.on('get data by priority', function(param) {
+      // obtiene todos los mensajes
+      contDatos.findDatoByPriority(io,param);      
+    });    
+    socket.on('get data by clasification', function(param) {
+      // obtiene todos los mensajes
+      contDatos.findDatoByClassification(io,param);      
+    });
+    socket.on('get data by protocol', function(param) {
+      // obtiene todos los mensajes
+      contDatos.findDatoByProtocol(io,param);      
+    });
+    socket.on('get data by ipOrigin', function(param) {
+      // obtiene todos los mensajes
+      contDatos.findDatoByIpOrigin(io,param);      
+    });
+    socket.on('get data by portOrigin', function(param) {
+      // obtiene todos los mensajes
+      contDatos.findDatoByPortOrigin(io,param);      
+    });
+    socket.on('get data by ipDestination', function(param) {
+      // obtiene todos los mensajes
+      contDatos.findDatoByIpDestination(io,param);      
+    });
+    socket.on('get data by portDestination', function(param) {
+      // obtiene todos los mensajes
+      contDatos.findDatoByPortDestination(io,param);      
+    });    
 /*    socket.on('new message', function(msg) {
       // agrega un nuevo mensaje
       contDatos.addMessages(msg);

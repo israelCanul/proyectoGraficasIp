@@ -4,6 +4,7 @@ exports = module.exports = function(app, mongoose) {
 	    fecha    : String
 	  , hora     : String
 	  , tipo : String
+	  ,prioridad:String
 	  , clasificacion : String
 	  , protocolo : String
 	  , ip_origen : String
