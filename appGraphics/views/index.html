@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta charset='UTF-8'>
+	<title>Sala de Chat</title>
+
+	<script src="/javascripts/jquery.js"></script>
+</head>
+<body>
+	<h3>Data</h3>
+	<ul id="list-msgs">
+    
+  	</ul>
+  	
+<script src="/socket.io/socket.io.js"></script>
+
+
+<script type="text/javascript">
+	var socket=io();
+
+	socket.on('get data', function (data) {
+		$('#list-msgs').html("");
+	var datos=data;
+		if(datos.length>0){
+			console.log("son mas de 0 : "+ datos.length);
+			datos.map(function(dato){
+				$('#list-msgs').append( $('<li>').text(dato) );			
+			});
+		}	
+      
+    });
+
+   /* $('#new-msg').keyup(function (evt) {
+      if (evt.keyCode === 13) {
+        socket.emit('chat message', $('#new-msg').val());
+        $('#new-msg').val('');
+      }
+    });*/
+</script>
+</body>
+</html>
