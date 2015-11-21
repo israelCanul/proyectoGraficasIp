@@ -3,5 +3,6 @@ extends layout
 block content
   h1= title
   label Realice su consulta de acuerdo a cualquier campo de la tabla.
-  input( data-index='mio', id='busqueda')
-  pre#list-msgs
+  input(data-index='mio', id='busqueda')
+  table(id="list-msgs",style="padding: 2px" border="01")
+  div(id="container",style="min-width: 310px; height: 400px; max-width:800px; margin: 0 auto")
