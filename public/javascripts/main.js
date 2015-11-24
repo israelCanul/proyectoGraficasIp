@@ -3,23 +3,21 @@ $(document).ready(function(){
 	var datosAutocomplete=null;
 	var point=[];
 	var arrayPuntos=[];
+
+	
+
 	//llamamos y cargamos los datos para el autocomplete
 	socket.emit('get data autoComplete');
 	//habilitamos la funcion para cargar los datos ya sea de la busqueda en general o de la que realicemos con el 
 	//autocomplete
 	socket.on('get data', function (data) {
 		$('#list-msgs').html("");
-	var datos=data;
+		var datos=data;
 		if(datos.length>0){
-			//console.log("son mas de 0 : "+ datos.length);
-			
-			//console.log(datos);
-			$('#list-msgs').html('<tr><th>Fecha</th><th>Hora</th><th>Tipo</th><th>Clasificacion</th><th>Prioridad</th><th>Protocolo</th><th>Ip Origen</th><th>Puerto Origen</th><th>Ip Destino</th><th>Puerto Destino</th><tr>');
+			$('#list-msgs').html('<tr><th>Id</th><th>Fecha</th><th>Hora</th><th>Tipo</th><th>Prioridad</th><th>Clasificacion</th><th>Protocolo</th><th>Ip Origen</th><th>Puerto Origen</th><th>Ip Destino</th><th>Puerto Destino</th><tr>');
 			datos.map(function(dato){
-
-
-				$('#list-msgs').append(
-									'<tr><td>'+  dato.fecha+"</td><td>"+
+			$('#list-msgs').append(
+									"<tr><td>"+  dato._id+"</td><td>"+  dato.fecha+"</td><td>"+
 									dato.hora +"</td><td>"+
 									dato.tipo+"</td><td>"+
 									dato.prioridad+"</td><td>"+
@@ -29,48 +27,35 @@ $(document).ready(function(){
 									dato.puerto_origen+"</td><td>"+
 									dato.ip_destino+"</td><td>"+
 									dato.puerto_destino+'</td></tr>');
-									  			
 			});
 		}
-      
     });
-    // socket para los graficos
+
+	// socket para recibir los datos actualizados para la tabla 
 	socket.on('graphics', function (data) {
-	//console.log(data[0]);	
+	$("#contenedorLista").html("");	
 	arrayPuntos=[];
 	var datos=data;
-/*	console.log(datos.length);
-	console.log(datos[0]);
-	console.log(datos[2]);*/
+
 	for (var i = 0 ; i < datos.length; i++) {
-		console.log(datos[i]);
+		var columnas=['Fecha','Hora','Tipo','Prioridad','Clasificacion','Protocolo','Ip Origen','Puerto Origen','Ip Destino','Puerto Destino'];
 		point=[];
+
+		$("#contenedorLista").append('<div class="columnas"><ul id="tabla_'+i+'"><th><h5>'+columnas[i]+'</h5></th></ul></div>');
 		datos[i].map(function(dato){
+			//console.log(dato);
+			$("#tabla_"+i).append('<li>'+dato.nombre+' : '+
+										dato.y+'</li>'
+				);	
 			tempPoint=[];
 			tempPoint.push(dato.x,dato.y);
 			point.push(tempPoint);
 		});
+
 		arrayPuntos.push(point);
 	};
-	//console.log(datos.length);
-	/*datos.map(function(item){
 
-		//console.log("son mas de 0 : "+ datos.length);
-		tempPoint=[];
-		item.map(function(dato){
-			tempPoint=[];
-			tempPoint.push(dato.x,dato.y);
-			point.push(tempPoint);
-		});
-		arrayPuntos.push(point);
-		console.log(arrayPuntos);
 
-	});*/
-	
-
-			
-	      	/*pointFecha.push(tempPoint);*/
-	      	//console.log(pointFecha);
  $('#container').highcharts({
         chart: {
             type: 'scatter',
@@ -90,7 +75,7 @@ $(document).ready(function(){
                 enabled: true,
                 text: 'Valores de La tabla'
             },
-            categories: ['Fecha', 'Hora', 'Tipo','Clasificacion','Prioridad','Protocolo','Ip origen','Puerto origen','Ip destino','Puerto destino'],
+            categories: ['Fecha', 'Hora', 'Tipo','Prioridad','Clasificacion','Protocolo','Ip origen','Puerto origen','Ip destino','Puerto destino'],
             startOnTick: true,
             endOnTick: true,
             showLastLabel: true
@@ -100,7 +85,7 @@ $(document).ready(function(){
                 text: 'Contadores'
             }
         },
-/*        legend: {
+        /*legend: {
             layout: 'horizontal',
             align: 'left',
             verticalAlign: 'top',
@@ -128,11 +113,10 @@ $(document).ready(function(){
                         }
                     }
                 },
-/*                tooltip: {
-                	footerFormat:'<b>{series.color}</b>',
-                    headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: '{point.x} cm, {point.y} kg<br>'
-                }*/
+                tooltip: {
+                	headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: 'Cantidad {point.y} repetidos<br>Posicion {point.x} en la grafica'
+                }
             }
         },
         series: [
@@ -145,61 +129,136 @@ $(document).ready(function(){
         }, 
         {
         	name: 'Hora',
-            color: 'rgba(223, 83, 83, .5)',
+            color: 'rgba(223, 83, 30, .5)',
             data: arrayPuntos[1],
 
         }, 
         {
         	name: 'Tipo',
-            color: 'rgba(223, 83, 83, .5)',
+            color: 'rgba(130, 83, 83, .5)',
             data: arrayPuntos[2],
 
         }, 
         {
         	name: 'Clasificacion',
-            color: 'rgba(223, 83, 83, .5)',
+            color: 'rgba(223, 83, 20, .5)',
             data: arrayPuntos[3],
 
         }, 
         {
         	name: 'Prioridad',
-            color: 'rgba(223, 83, 83, .5)',
+            color: 'rgba(10, 83, 83, .5)',
             data: arrayPuntos[4],
 
         }, 
         {
         	name: 'Protocolo',
-            color: 'rgba(223, 83, 83, .5)',
+            color: 'rgba(10, 83, 20, .5)',
             data: arrayPuntos[5],
 
         },
         {
         	name: 'Ip Origen',
-            color: 'rgba(223, 83, 83, .5)',
+            color: 'rgba(223, 255, 83, .5)',
             data: arrayPuntos[6]
         }, 
         {
         	name: 'Puerto Origen',
-            color: 'rgba(223, 83, 83, .5)',
+            color: 'rgba(223, 83, 255, .5)',
             data: arrayPuntos[7],
 
         }, 
         {
         	name: 'Ip Destino',
-            color: 'rgba(223, 83, 83, .5)',
+            color: 'rgba(0, 83, 83, .5)',
             data: arrayPuntos[8],
 
         },                                                 
         {
             name: 'Puerto Destino',
-            color: 'rgba(119, 152, 191, .5)',
+            color: 'rgba(119, 152, 0, .5)',
             data: arrayPuntos[9],
         }]
     });
+});
+
+// socket para recibir los datos actualizados para la tabla 
+socket.on('graphicsDetalle', function (data) {
+
+	var arrayPuntosDetalle=[];
+	var datos=data;
+	console.log(datos);
+
+
+    $('#container2').highcharts({
+    	chart: {
+            zoomType: 'xy'
+        },
+        title: {
+            text: 'Grafica de dispersion de los datos Filtrados'
+        },
+        subtitle: {
+            text: 'Mediante Consulta - Tabla Anterior'
+        },
+        xAxis: {
+            title: {
+                enabled: true,
+                text: 'Valores de La tabla'
+            },
+            categories: ['Fecha', 'Hora', 'Tipo','Prioridad','Clasificacion','Protocolo','Ip origen','Puerto origen','Ip destino','Puerto destino'],
+            startOnTick: true,
+            endOnTick: true,
+            showLastLabel: true
+        },
+        yAxis: {
+            title: {
+                text: 'Contadores'
+            }
+        },
+        plotOptions: {
+            scatter: {
+                marker: {
+                    radius: 5,
+                    states: {
+                        hover: {
+                            enabled: true,
+                            lineColor: 'rgb(100,100,100)'
+                        }
+                    }
+                },
+                states: {
+                    hover: {
+                        marker: {
+                            enabled: false
+                        }
+                    }
+                },
+                tooltip: {
+                	headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: 'Cantidad {point.y} repetidos<br>Posicion {point.x} en la grafica'
+                }
+            }
+        },
+/*        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },*/
+         series: datos
+        /*series: [{
+            name: 'Tokyo',
+            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+        }, {
+            name: 'New York',
+            data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+        }]*/
+    });
+
+});
 
 
 
-    });    
 	//habilitamos la funcion para que cada vez que se envien los datos de busqueda se carge y reinicialize el autocomplete
 	socket.on('get data autoComplete', function (datos) {
 		//console.log(datos);

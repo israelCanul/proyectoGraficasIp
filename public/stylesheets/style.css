@@ -6,3 +6,24 @@ body {
 a {
   color: #00B7FF;
 }
+.columnas{
+	position: relative;
+    float: left;
+    margin-left:0px;
+    width:100%;
+}
+/*#container{
+	position: relative;
+    width: 80%;
+    float: left;
+}*/
+#leftContainer{
+	position: relative;
+    width: 80%;
+    float: left;
+}
+#contenedorLista{
+	position: relative;
+    width: 20%;
+    float: left;	
+}
