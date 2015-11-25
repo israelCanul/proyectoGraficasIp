@@ -387,7 +387,10 @@ socket.on('graphicsDetalle', function (data) {
 				        }	
 				        if(t.item.categoria=='Puerto destino'){
 				        	socket.emit('get data by portDestination',t.item.label);
-				        }					        				        				        				        				        
+				        }
+				        if(t.item.categoria=='All'){
+				        	socket.emit('get data');
+				        }				        					        				        				        				        				        
 				    }
 	    });		   
     });

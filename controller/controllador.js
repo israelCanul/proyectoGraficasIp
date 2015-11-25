@@ -309,9 +309,14 @@ exports.getDataAutoComplete = function(io) {
             categoria:"Puerto destino"
           });
           repetido[mnsj.puerto_destino+"_Puerto_destino"]=true;
-        }                                                                       
+        } 
+
         });
         //console.log(strDest);
+        strDest.push ({
+            label: 'All',
+            categoria:"All"
+          });
         io.emit('get data autoComplete',strDest);
       }
       
