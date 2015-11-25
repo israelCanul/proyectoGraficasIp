@@ -166,7 +166,7 @@ exports.separar=function(datos){
   });  
   // general para el primer grafico de contadores
   general=[
-    Fecha1,Hora1,Tipo1,Clasificacion1,Prioridad1,Protocolo1,Ip_Origen1,Puerto_Origen1,Ip_Destino1,Puerto_Destino1
+    Fecha1,Hora1,Tipo1,Prioridad1,Clasificacion1,Protocolo1,Ip_Origen1,Puerto_Origen1,Ip_Destino1,Puerto_Destino1
   ];
   //general para el segundo grafico
   /*var general2=[
@@ -233,50 +233,83 @@ exports.getDataAutoComplete = function(io) {
   //console.log("solicito");
    Dato.find(function(err, msj) {
     var strDest=[];
+    var repetido={};
       if(err) res.send(500, err.message);
       ////console.log('GET /messages'+msj);
       if(msj.length>0){
+
         msj.map(function(mnsj){
+
+        if(repetido[mnsj.fecha+"_Fecha"]!=true){
           strDest.push ({
             label: mnsj.fecha,
             categoria:"Fecha"
           });
+          repetido[mnsj.fecha+"_Fecha"]=true;
+        }
+        if(repetido[mnsj.prioridad+"_Prioridad"]!=true){
           strDest.push ({
             label: mnsj.prioridad,
             categoria:"Prioridad"
-          });          
+          });
+          repetido[mnsj.prioridad+"_Prioridad"]=true;
+        }
+        if(repetido[mnsj.hora+"_Hora"]!=true){            
           strDest.push ({
             label: mnsj.hora,
             categoria:"Hora"
           });
+          repetido[mnsj.hora+"_Hora"]=true;
+        }
+        if(repetido[mnsj.tipo+"_Tipo"]!=true){    
           strDest.push ({
             label: mnsj.tipo,
             categoria:"Tipo"
           });
+          repetido[mnsj.tipo+"_Tipo"]=true;
+        }
+        if(repetido[mnsj.prioridad+"_Clasificacion"]!=true){  
           strDest.push ({
             label: mnsj.clasificacion,
             categoria:"Clasificacion"
           });
+          repetido[mnsj.prioridad+"_Clasificacion"]=true;
+        } 
+        if(repetido[mnsj.protocolo+"_Protocolo"]!=true){ 
           strDest.push ({
             label: mnsj.protocolo,
             categoria:"Protocolo"
           });
+          repetido[mnsj.protocolo+"_Protocolo"]=true;
+        }
+        if(repetido[mnsj.ip_origen+"_Ip_origen"]!=true){   
           strDest.push ({
             label: mnsj.ip_origen,
             categoria:"Ip origen"
-          });           
+          });
+          repetido[mnsj.ip_origen+"_Ip_origen"]=true;
+        }
+        if(repetido[mnsj.puerto_origen+"_Puerto_origen"]!=true){              
           strDest.push ({
             label: mnsj.puerto_origen,
             categoria:"Puerto origen"
           });
+          repetido[mnsj.puerto_origen+"_Puerto_origen"]=true;
+        }
+        if(repetido[mnsj.ip_destino+"_Ip_destino"]!=true){  
           strDest.push ({
             label: mnsj.ip_destino,
             categoria:"Ip destino"
           });
+          repetido[mnsj.ip_destino+"_Ip_destino"]=true;
+        }
+        if(repetido[mnsj.puerto_destino+"_Puerto_destino"]!=true){  
           strDest.push ({
             label: mnsj.puerto_destino,
             categoria:"Puerto destino"
-          });                                                                     
+          });
+          repetido[mnsj.puerto_destino+"_Puerto_destino"]=true;
+        }                                                                       
         });
         //console.log(strDest);
         io.emit('get data autoComplete',strDest);

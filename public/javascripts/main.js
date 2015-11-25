@@ -3,6 +3,8 @@ $(document).ready(function(){
 	var datosAutocomplete=null;
 	var point=[];
 	var arrayPuntos=[];
+	var legendas={};
+	var legendasContadores={};
 
 	
 
@@ -27,6 +29,18 @@ $(document).ready(function(){
 									dato.puerto_origen+"</td><td>"+
 									dato.ip_destino+"</td><td>"+
 									dato.puerto_destino+'</td></tr>');
+				legendas[dato._id]={
+				'fecha':dato.fecha,
+				'hora':dato.hora,
+				'tipo':dato.tipo,
+				'prioridad':dato.prioridad,
+				'clasificacion':dato.clasificacion,
+				'protocolo':dato.protocolo,
+				'ip_origen':dato.ip_origen,
+				'puerto_origen':dato.puerto_origen,
+				'ip_destino':dato.ip_destino,
+				'puerto_destino':dato.puerto_destino,
+				}
 			});
 		}
     });
@@ -40,18 +54,22 @@ $(document).ready(function(){
 	for (var i = 0 ; i < datos.length; i++) {
 		var columnas=['Fecha','Hora','Tipo','Prioridad','Clasificacion','Protocolo','Ip Origen','Puerto Origen','Ip Destino','Puerto Destino'];
 		point=[];
-
-		$("#contenedorLista").append('<div class="columnas"><ul id="tabla_'+i+'"><th><h5>'+columnas[i]+'</h5></th></ul></div>');
+		var tempLegenda='';
+		
 		datos[i].map(function(dato){
-			//console.log(dato);
-			$("#tabla_"+i).append('<li>'+dato.nombre+' : '+
-										dato.y+'</li>'
-				);	
+
+			//leyenda que aparecera en la parti izquierda de los graficos
+			tempLegenda+='<h5>'+dato.nombre+' <br><label style="color:yellow">(Repeticiones en Grafico :'+dato.y+')</label></h5><br>'		
 			tempPoint=[];
 			tempPoint.push(dato.x,dato.y);
 			point.push(tempPoint);
-		});
+			
 
+		});
+		// esta leyenda sirve para la descripcion lateral del primer grafico
+		legendasContadores[columnas[i]]={
+			'descripcion':tempLegenda
+		}
 		arrayPuntos.push(point);
 	};
 
@@ -96,6 +114,15 @@ $(document).ready(function(){
             borderWidth: 1
         },*/
         plotOptions: {
+            series: {
+                cursor: 'pointer',
+                events: {
+                    mouseOver: function () {
+                    	$("#descCont2").html(legendasContadores[this.name].descripcion);
+                    }
+                },
+
+            }, 
             scatter: {
                 marker: {
                     radius: 5,
@@ -115,7 +142,7 @@ $(document).ready(function(){
                 },
                 tooltip: {
                 	headerFormat: '<b>{series.name}</b><br>',
-                    pointFormat: 'Cantidad {point.y} repetidos<br>Posicion {point.x} en la grafica'
+                    pointFormat: 'Repeticiones en Grafico : {point.y} '
                 }
             }
         },
@@ -140,13 +167,13 @@ $(document).ready(function(){
 
         }, 
         {
-        	name: 'Clasificacion',
+        	name: 'Prioridad',
             color: 'rgba(223, 83, 20, .5)',
             data: arrayPuntos[3],
 
         }, 
         {
-        	name: 'Prioridad',
+        	name: 'Clasificacion',
             color: 'rgba(10, 83, 83, .5)',
             data: arrayPuntos[4],
 
@@ -216,6 +243,59 @@ socket.on('graphicsDetalle', function (data) {
             }
         },
         plotOptions: {
+            series: {
+                cursor: 'pointer',
+                events: {
+                    click: function (event) {
+                    	$("#descCont2").html(
+                    		'<h5>Id : <label style="color:yellow">'+this.name+'</label></h5><br>'+
+                    		'<h5>Fecha : <label style="color:yellow">'+legendas[this.name].fecha+'</label></h5><br>'+
+                    		'<h5>Hora : <label style="color:yellow">'+legendas[this.name].hora+'</label></h5><br>'+
+                    		'<h5>Tipo : <label style="color:yellow">'+legendas[this.name].tipo+'</label></h5><br>'+
+                    		'<h5>Prioridad : <label style="color:yellow">'+legendas[this.name].prioridad+'</label></h5><br>'+
+                    		'<h5>Clasificacion : <label style="color:yellow">'+legendas[this.name].clasificacion+'</label></h5><br>'+
+                    		'<h5>Protocolo : <label style="color:yellow">'+legendas[this.name].protocolo+'</label></h5><br>'+
+                    		'<h5>Ip Origen : <label style="color:yellow">'+legendas[this.name].ip_origen+'</label></h5><br>'+
+                    		'<h5>Puerto Origen : <label style="color:yellow">'+legendas[this.name].puerto_origen+'</label></h5><br>'+
+                    		'<h5>Ip Dest. : <label style="color:yellow">'+legendas[this.name].ip_destino+'</label></h5><br>'+
+                    		'<h5>Puerto Dest. : <label style="color:yellow">'+legendas[this.name].puerto_destino+'</label></h5><br>'
+                    		);
+                    },
+                    mouseOver: function () {
+                    	//console.log(legendas);
+                    	$("#descCont2").html(
+                    		'<h5>Id : <label style="color:yellow">'+this.name+'</label></h5><br>'+
+                    		'<h5>Fecha : <label style="color:yellow">'+legendas[this.name].fecha+'</label></h5><br>'+
+                    		'<h5>Hora : <label style="color:yellow">'+legendas[this.name].hora+'</label></h5><br>'+
+                    		'<h5>Tipo : <label style="color:yellow">'+legendas[this.name].tipo+'</label></h5><br>'+
+                    		'<h5>Prioridad : <label style="color:yellow">'+legendas[this.name].prioridad+'</label></h5><br>'+
+                    		'<h5>Clasificacion : <label style="color:yellow">'+legendas[this.name].clasificacion+'</label></h5><br>'+
+                    		'<h5>Protocolo : <label style="color:yellow">'+legendas[this.name].protocolo+'</label></h5><br>'+
+                    		'<h5>Ip Origen : <label style="color:yellow">'+legendas[this.name].ip_origen+'</label></h5><br>'+
+                    		'<h5>Puerto Origen : <label style="color:yellow">'+legendas[this.name].puerto_origen+'</label></h5><br>'+
+                    		'<h5>Ip Dest. : <label style="color:yellow">'+legendas[this.name].ip_destino+'</label></h5><br>'+
+                    		'<h5>Puerto Dest. : <label style="color:yellow">'+legendas[this.name].puerto_destino+'</label></h5><br>'
+                    		);
+                    },                    
+                    legendItemClick: function () {
+                        //alert( );
+                    	$("#descCont2").html(
+                    		'<h5>Id : <label style="color:yellow">'+this.name+'</label></h5><br>'+
+                    		'<h5>Fecha : <label style="color:yellow">'+legendas[this.name].fecha+'</label></h5><br>'+
+                    		'<h5>Hora : <label style="color:yellow">'+legendas[this.name].hora+'</label></h5><br>'+
+                    		'<h5>Tipo : <label style="color:yellow">'+legendas[this.name].tipo+'</label></h5><br>'+
+                    		'<h5>Prioridad : <label style="color:yellow">'+legendas[this.name].prioridad+'</label></h5><br>'+
+                    		'<h5>Clasificacion : <label style="color:yellow">'+legendas[this.name].clasificacion+'</label></h5><br>'+
+                    		'<h5>Protocolo : <label style="color:yellow">'+legendas[this.name].protocolo+'</label></h5><br>'+
+                    		'<h5>Ip Origen : <label style="color:yellow">'+legendas[this.name].ip_origen+'</label></h5><br>'+
+                    		'<h5>Puerto Origen : <label style="color:yellow">'+legendas[this.name].puerto_origen+'</label></h5><br>'+
+                    		'<h5>Ip Dest. : <label style="color:yellow">'+legendas[this.name].ip_destino+'</label></h5><br>'+
+                    		'<h5>Puerto Dest. : <label style="color:yellow">'+legendas[this.name].puerto_destino+'</label></h5><br>'
+                    		);
+                    }  
+                },
+
+            },         	
             scatter: {
                 marker: {
                     radius: 5,
